@@ -58,8 +58,17 @@ namespace ServiceStack.ServiceModel.Serialization
 					PropertySerializerEntry propertySerializerEntry;
 					if (!propertySetterMap.TryGetValue(propertyName, out propertySerializerEntry))
 					{
-						Log.WarnFormat("Property '{0}' does not exist on type '{1}'", propertyName, type.FullName);
-						continue;
+                        // Try flipping the cased of the first character.
+                        var name2 = ServiceStack.Text.StringExtensions.ToggleFirstChar(propertyName);
+                        if (name2 != null && propertySetterMap.TryGetValue(name2, out propertySerializerEntry))
+                        {
+                            propertyName = name2;
+                        }
+                        else
+                        {
+                            Log.WarnFormat("Property '{0}' does not exist on type '{1}'", propertyName, type.FullName);
+                            continue;
+                        }
 					}
 
 					var value = propertySerializerEntry.PropertyParseStringFn(propertyTextValue);

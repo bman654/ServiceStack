@@ -82,6 +82,33 @@ namespace ServiceStack.WebHost.Endpoints.Tests
 			Assert.That(request.Equals(toRequest), Is.True);
 		}
 
+        [Test]
+        public void Can_Create_RequestOfAllTypes_from_camelCase_string_map()
+        {
+            var request = RequestOfAllTypes.Create(1);
+            var map = new Dictionary<string, string> {
+                {"byte",request.Byte.ToString()},
+                {"char",request.Char.ToString()},
+                {"dateTime",request.DateTime.ToShortestXsdDateTimeString()},
+                {"decimal",request.Decimal.ToString()},
+                {"double",request.Double.ToString()},
+                {"float",request.Float.ToString()},
+                {"guid",request.Guid.ToString()},
+                {"int",request.Int.ToString()},
+                {"long",request.Long.ToString()},
+                {"short",request.Short.ToString()},
+                {"string",request.String},
+                {"timeSpan",request.TimeSpan.ToString()},
+                {"uInt",request.UInt.ToString()},
+                {"uLong",request.ULong.ToString()},
+			};
+
+            var toRequest = KeyValueDataContractDeserializer.Instance.Parse(map, typeof(RequestOfAllTypes));
+
+            Assert.That(request.Equals(toRequest), Is.True);
+        }
+
+
 	}
 
 }
